@@ -1,6 +1,6 @@
 # Starship Bloopers
 
-### Yet another Asteroid clone just to mess around with it
+### Yet another Asteroids clone just to mess around with it
 
 
 Work in progress: link
