@@ -3,7 +3,7 @@
 ### Yet another Asteroids clone just to mess around with it
 
 
-Work in progress: link
+Work in progress: https://rahjael.github.io/StarshipBloopers/
 
 
 Current goals:
