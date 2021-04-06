@@ -6,37 +6,39 @@
 Work in progress: https://rahjael.github.io/StarshipBloopers/
 
 
-Current goals:
-
-[x] mouse controlled player's ship
-
-[x] visual effects when thrusters are on
-
-[x] randomly generated asteroids
-
-[x] firing mah lazers
-
-[x] collision detection for destroying stuff
-
-[ ] more realistic physics adding mass to objects
-
-[ ] destructible asteroids
-
-[ ] visual effects for asteroids destruction
-
-[ ] HUD with player's hp, energy, shields and stuff like that (TBD)
 
 
-Later on:
+- **Current goals:**
 
-[ ] have viewport move instead of everything else
+- [x] mouse controlled player's ship
+
+- [x] visual effects when thrusters are on
+
+- [x] randomly generated asteroids
+
+- [x] firing mah lazers
+
+- [x] collision detection for destroying stuff
+
+- [ ] more realistic physics adding mass to objects
+
+- [ ] destructible asteroids
+
+- [ ] visual effects for asteroids destruction
+
+- [ ] HUD with player's hp, energy, shields and stuff like that (TBD)
 
 
-Maybe:
+- **Later on:**
 
-[ ] maps? with static stuff? Maybe destructable static stuff?
+- [ ] have viewport move instead of everything else
 
 
-Wishful thinking:
+- **Maybe:**
 
-[ ] some enemies with very very VERY basic AI
+- [ ] maps? with static stuff? Maybe destructable static stuff?
+
+
+- **Wishful thinking:**
+
+- [ ] some enemies with very very VERY basic AI
