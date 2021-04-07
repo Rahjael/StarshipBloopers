@@ -32,7 +32,9 @@ canvas.addEventListener('mousemove', (e) => {
 });
 
 canvas.addEventListener('keydown', (e) => {  
-  playerShip.fireLaser();
+  if(e.keyCode == 70) playerShip.fireLaser();
+
+  console.log(astManager.pieces);
 }, false);
 
 
@@ -42,8 +44,8 @@ function animate() {
   playerShip.update();
   playerShip.draw();
 
+  if(astManager.pieces.length < 10) astManager.getPiece();
   astManager.update();
-  if(astManager.pieces.length < 8) astManager.getPiece();
   
   requestAnimationFrame(animate);
 }

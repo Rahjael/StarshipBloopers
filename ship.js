@@ -100,7 +100,6 @@ class PlayerShip {
 
   fireLaser() {
     this.laserShots.push(new LaserShot(this.x, this.y, this.radius, this.theta));
-    console.log("Fired");
   }
 
   /*
@@ -179,6 +178,10 @@ class EngineParticle {
     ctx.fill();
   }
 }
+
+
+
+
 
 class LaserShot {
   constructor(shipX, shipY, shipRadius, shipTheta) {
