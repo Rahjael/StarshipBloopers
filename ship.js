@@ -1,6 +1,8 @@
 
 class PlayerShip {
   constructor(x, y, radius) {
+    this.objtype = 'PlayerShip';
+    
     this.x = x;
     this.y = y;
 
@@ -190,6 +192,7 @@ class LaserShot {
     this.y = shipY;
 
     this.radius = shipRadius * 0.5;
+    this.color = '#fa05e6';
 
     this.theta = shipTheta;
 
@@ -211,7 +214,7 @@ class LaserShot {
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.moveTo(this.x, this.y);
-    ctx.strokeStyle = 'red';
+    ctx.strokeStyle = this.color;
     ctx.lineTo(this.x + this.radius * Math.cos(this.theta), this.y + this.radius * Math.sin(this.theta));
     ctx.stroke();
   }

@@ -51,6 +51,8 @@ class Asteroid {
 
 class AsteroidPiece {
   constructor() {
+    this.type = 'AsteroidPiece';
+
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
 
@@ -61,6 +63,7 @@ class AsteroidPiece {
     // this.color = 'black';
     this.color = 'hsl(250, ' + randInt(0, 25) + '%, ' + randInt(0, 25) + '%)';
     this.vertices = [];
+    this.segments = [];
 
 
     // for(let i = 0; i < 4; i++) {
@@ -132,17 +135,23 @@ class AsteroidPiece {
     this.vertices.forEach( (v, i, vert) => {
       // ctx.lineTo(vert[(i+1) % vert.length].x * Math.cos(this.theta), vert[(i+1) % vert.length].y * Math.cos(this.theta));
       ctx.lineTo(vert[(i+1) % vert.length].x, vert[(i+1) % vert.length].y);
-      // ctx.fillText(i, v.x * Math.cos(this.theta), v.y * Math.cos(this.theta))
-      ctx.font = '20px Arial';
-      ctx.fillText(i, v.x, v.y);
+
+      if(debugMode) {
+        ctx.font = '10px Arial';
+        ctx.fillText(i, v.x, v.y);
+      }
+
     });
     ctx.fill();
     ctx.stroke();
 
-    // Reference circle
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI, true);
-    ctx.strokeStyle = 'red';
-    ctx.stroke();
+    if(debugMode) {
+    //Reference circle
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI, true);
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
   }
 }
