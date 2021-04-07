@@ -44,8 +44,10 @@ function animate() {
   playerShip.update();
   playerShip.draw();
 
-  if(astManager.pieces.length < 10) astManager.getPiece();
+  if(astManager.pieces.length < 2) astManager.getPiece();
   astManager.update();
+
+  collisionDetector.update();
   
   requestAnimationFrame(animate);
 }
@@ -54,6 +56,7 @@ function animate() {
 const universe = new Universe();
 const astManager = new AsteroidManager();
 const playerShip = new PlayerShip(canvas.width/2, canvas.height/2, shipSize);
+const collisionDetector = new CollisionDetector();
 
 
 

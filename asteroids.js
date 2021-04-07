@@ -54,7 +54,7 @@ class AsteroidPiece {
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
 
-    this.radius = randInt(50, 70);
+    this.radius = randInt(20, 50);
     this.speedX = Math.random() * 2 - 1;
     this.speedY = Math.random() * 2 - 1;
     this.theta = Math.PI * 2 * Math.random();
@@ -124,7 +124,7 @@ class AsteroidPiece {
   draw() {
     ctx.beginPath();
     ctx.fillStyle = this.color;
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = 'grey';
     
     // ctx.moveTo(this.vertices[0].x * Math.cos(this.theta), this.vertices[0].y * Math.cos(this.theta));
     ctx.moveTo(this.vertices[0].x, this.vertices[0].y);

@@ -18,7 +18,7 @@ Work in progress: https://rahjael.github.io/StarshipBloopers/
 
 - [x] firing mah lazers
 
-- [x] collision detection for destroying stuff
+- [ ] collision detection for destroying stuff
 
 - [ ] more realistic physics adding mass to objects
 
