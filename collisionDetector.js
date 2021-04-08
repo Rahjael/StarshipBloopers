@@ -14,33 +14,36 @@ class CollisionDetector {
     this.detectProximity();
 
     // DEBUGGING: show a line for proximity
-    this.inProximity.forEach( objs => {
+    if(debugMode) {
+      this.inProximity.forEach( objs => {
 
-      ctx.beginPath();
-      ctx.moveTo(objs[0].x, objs[0].y);
-      ctx.strokeStyle = 'red';
-      ctx.lineTo(objs[1].x, objs[1].y)
-      ctx.stroke();
-    })
-
+        ctx.beginPath();
+        ctx.moveTo(objs[0].x, objs[0].y);
+        ctx.strokeStyle = 'red';
+        ctx.lineTo(objs[1].x, objs[1].y)
+        ctx.stroke();
+      })
+    }
     this.detectCollisions();
-
-
-
-
   }
 
+  
   detectCollisions() {
 
     this.inProximity.forEach( (obj, i, arr) => {
 
-      // If two asteroids
-      if(obj[0] instanceof AsteroidPiece && obj[1] instanceof AsteroidPiece) {
+      let obj1 = obj[0];
+      let obj2 = obj[1];
+
+      let bothAsteroids = obj1 instanceof AsteroidPiece && obj2 instanceof AsteroidPiece;
+      let shipAndAsteroid = (obj1 instanceof PlayerShip && obj2 instanceof AsteroidPiece) 
+                            || (obj1 instanceof AsteroidPiece && obj2 instanceof PlayerShip);
+
+      if(bothAsteroids || shipAndAsteroid) {
         // Get line equation of every pair of connected vertices:
         // Reminder: every vertex of an asteroid has: x, y, rad, theta
-        // but actually here I need only x and y
         // Vertices are stored in anticlockwise order
-        let segmentsOf1 = obj[0].vertices.map( (vertex, i, arr) => {
+        let segmentsOf1 = obj1.vertices.map( (vertex, i, arr) => {
           return {  x1: vertex.x,
                     y1: vertex.y, 
                     x2: arr[(i + 1) % arr.length].x,
@@ -48,7 +51,7 @@ class CollisionDetector {
                   }
         });
 
-        let segmentsOf2 = obj[1].vertices.map( (vertex, i, arr) => {
+        let segmentsOf2 = obj2.vertices.map( (vertex, i, arr) => {
           return {  x1: vertex.x,
                     y1: vertex.y, 
                     x2: arr[(i + 1) % arr.length].x,
@@ -101,6 +104,11 @@ class CollisionDetector {
       for(let j = i +1; j < this.allObjects.length; j++) {
         let obj1 = this.allObjects[i];
         let obj2 = this.allObjects[j];
+
+        // Don't consider proximity for pieces of same asteroid
+        if([obj1,obj2].every( obj => obj.hasOwnProperty('attachedTo'))) {
+          if(obj1.attachedTo == obj2.attachedTo) continue;
+        }
 
         let dist = Math.hypot(obj2.x - obj1.x, obj2.y - obj1.y);
         let proxyDist = (obj1.radius + obj2.radius) * 1.3;        
