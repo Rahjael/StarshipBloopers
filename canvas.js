@@ -46,16 +46,27 @@ canvas.addEventListener('keydown', (e) => {
       requestAnimationFrame(animate);
     }
   }
+
+  if(e.key == 'd') {
+    debugMode = debugMode == true ? false : true;
+  }
 }, false);
 
 
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  playerShip.update();
+  playerShip.update(mouse);
   playerShip.draw();
 
-  if(astManager.pieces.length < 10) astManager.getPiece();
+  // if(astManager.pieces.length < 10) {
+  //   astManager.getPiece();
+  // }
+
+  if(astManager.asteroids.length < 10) {
+    astManager.composeAsteroid();
+  }
+  
   astManager.update();
 
   collisionDetector.update();

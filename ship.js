@@ -5,11 +5,9 @@ class PlayerShip {
     
     this.x = x;
     this.y = y;
-
-    this.theta;
-    this.A;
-    this.B;
-    this.C;
+    this.theta = 0;
+    
+    this.vertices = [];
 
     this.radius = radius;
     this.color = 'white';
@@ -21,7 +19,6 @@ class PlayerShip {
 
     this.maxWingSpan = Math.PI * 0.8;
     this.minWingSpan = Math.PI * 0.2;
-
 
     this.engineParticles = [];
     this.laserShots = [];
@@ -37,38 +34,44 @@ class PlayerShip {
   * 
   */
   
-  update() {
+  update(pointer) {
     let speedX = this.speedX;
     let speedY = this.speedY;
 
     this.x += speedX;
     this.y += speedY;
 
+    // Out of screen adjustments for infinite plane
     if(this.x < 0) this.x += canvas.width;
     if(this.x > canvas.width) this.x -= canvas.width;
     if(this.y < 0) this.y += canvas.height;
     if(this.y > canvas.height) this.y -= canvas.height;
 
-    this.rotate(mouse);
+    this.rotate(pointer);
     this.operateEngines();
     this.engineParticles.forEach( part => part.update());
     this.engineParticles = this.engineParticles.filter( part => part.size > part.minSize);
 
 
     let wingSpan = this.maxWingSpan - (this.maxWingSpan - this.minWingSpan) * Math.hypot(this.speedX, this.speedY) / this.maxSpeed;
+    
+    this.vertices[0] = {  x: this.x + this.radius * Math.cos(this.theta),
+                y: this.y + this.radius * Math.sin(this.theta)
+    };
+    this.vertices[1] = {  x: this.x + this.radius * Math.cos(this.theta + (2*Math.PI - wingSpan)/2), 
+                y: this.y + this.radius * Math.sin(this.theta + (2*Math.PI - wingSpan)/2)
+    };
+    // Ship's center
+    this.vertices[2] = {  x: this.x, 
+                          y: this.y
+    };
+    this.vertices[3] = {  x: this.x + this.radius * Math.cos(this.theta - (2*Math.PI - wingSpan)/2), 
+                y: this.y + this.radius * Math.sin(this.theta - (2*Math.PI - wingSpan)/2)
+    };
 
-    this.A = { x: this.x + this.radius * Math.cos(this.theta),
-              y: this.y + this.radius * Math.sin(this.theta)
-            };
-    this.B = { x: this.x + this.radius * Math.cos(this.theta + (2*Math.PI - wingSpan)/2), 
-              y: this.y + this.radius * Math.sin(this.theta + (2*Math.PI - wingSpan)/2)
-            };
-    this.C = { x: this.x + this.radius * Math.cos(this.theta - (2*Math.PI - wingSpan)/2), 
-              y: this.y + this.radius * Math.sin(this.theta - (2*Math.PI - wingSpan)/2)
-            };
 
     // Apply drag
-    // dragFactor is always negative
+    // Remember: dragFactor is always negative
     if(speedX != 0 && speedY != 0) {
       this.speedX += universe.dragFactor * Math.sign(speedX);
       this.speedY += universe.dragFactor * Math.sign(speedY);
@@ -76,8 +79,6 @@ class PlayerShip {
 
     this.laserShots.forEach( shot => shot.update());
   }
-
-
 
   rotate(target = {x: 0, y: 0}) {
     this.theta = Math.atan2(target.y - this.y, target.x - this.x);
@@ -119,10 +120,10 @@ class PlayerShip {
 
     ctx.beginPath();
     ctx.fillStyle = this.color;
-    ctx.moveTo(this.A.x, this.A.y);    
-    ctx.lineTo(this.B.x, this.B.y);
-    ctx.lineTo(this.x, this.y);
-    ctx.lineTo(this.C.x, this.C.y);
+    ctx.moveTo(this.vertices[0].x, this.vertices[0].y);    
+    ctx.lineTo(this.vertices[1].x, this.vertices[1].y);
+    ctx.lineTo(this.vertices[2].x, this.vertices[2].y); // Ship's center
+    ctx.lineTo(this.vertices[3].x, this.vertices[3].y);
     ctx.closePath();
     ctx.fill();
   }
