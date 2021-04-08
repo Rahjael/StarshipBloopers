@@ -83,19 +83,16 @@ class CollisionDetector {
             }
           }
         }
-
       }
-      
-
-
-
-    })
+    });
 
   }
 
   detectProximity() {
     // Make a list of objects close to each other
     // This helps avoiding too many unnecessary calculations
+
+    // Empty previous proximities
     this.inProximity = [];
 
     this.allObjects = astManager.pieces.concat(playerShip.laserShots, playerShip);
