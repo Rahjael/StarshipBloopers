@@ -37,20 +37,20 @@ canvas.addEventListener('mousemove', (e) => {
 canvas.addEventListener('keydown', (e) => {  
   if(e.key == 'f') playerShip.fireLaser();
 
-  if(e.key == 's') stopAnimation = true;
   if(e.key == 'p') {
-    stopAnimation = false;
-    requestAnimationFrame(animate);
+    if(!stopAnimation) {
+      stopAnimation = true;
+    }
+    else {
+      stopAnimation = false;
+      requestAnimationFrame(animate);
+    }
   }
 }, false);
 
 
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillText('F to fire', 50, 50);
-  ctx.fillText('S to stop animation', 50, 60);
-  ctx.fillText('P to keep playing', 50, 70);
   
   playerShip.update();
   playerShip.draw();
@@ -59,6 +59,8 @@ function animate() {
   astManager.update();
 
   collisionDetector.update();
+
+  hud.update();
   
   
   if(!stopAnimation) {
@@ -71,7 +73,7 @@ const universe = new Universe();
 const astManager = new AsteroidManager();
 const playerShip = new PlayerShip(canvas.width/2, canvas.height/2, shipSize);
 const collisionDetector = new CollisionDetector();
-
+const hud = new HUD();
 
 
 animate();
