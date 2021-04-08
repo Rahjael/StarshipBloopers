@@ -1,14 +1,13 @@
 
 
 class Particle {
-  // TODO rework and finish this class
-  constructor(x, y, radius) {
-    this.x = shipX;
-    this.y = shipY;
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
 
-    this.size = Math.random() * shipRadius * 0.2;
-    this.speedX = Math.random() * 3 - 1;
-    this.speedY = Math.random() * 3 - 1;
+    this.size = Math.random() * 10;
+    this.speedX = Math.random() * 4 - 2;
+    this.speedY = Math.random() * 4 - 2;
 
     this.hue = 60;
     this.lightness = 100;
@@ -16,7 +15,6 @@ class Particle {
     this.updateColor();
     
     this.minSize = 0.06;
-    
   }
 
   updateColor() {
@@ -27,6 +25,8 @@ class Particle {
     this.x += this.speedX;
     this.y += this.speedY;
     this.size -= this.minSize;
+
+    if(this.size < 0) this.size = 0;
 
     // Transition color
     if(this.lightness > 50) {
@@ -39,6 +39,8 @@ class Particle {
       this.lightness -= 5;
     }
     this.updateColor();
+    this.draw();
+
   }
 
   draw() {
@@ -47,5 +49,4 @@ class Particle {
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.fill();
   }
-
 }

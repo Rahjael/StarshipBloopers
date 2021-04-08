@@ -7,6 +7,8 @@ class CollisionDetector {
     this.allObjects = [];
     this.inProximity = [];
 
+    this.animations = [];
+
 
   }
 
@@ -25,6 +27,9 @@ class CollisionDetector {
       })
     }
     this.detectCollisions();
+
+    this.animations = this.animations.filter( anim => anim.stillHappening);
+    this.animations.forEach( anim => anim.update());
   }
 
 
@@ -76,7 +81,12 @@ class CollisionDetector {
             
             if(coefficient1 < 1 && coefficient1 > 0 && coefficient2 < 1 && coefficient2 > 0) {
 
+              let x = segmentsOf1[i].x1 + coefficient1*(segmentsOf1[i].x2 - segmentsOf1[i].x1);
+              let y = segmentsOf1[i].y1 + coefficient1*(segmentsOf1[i].y2 - segmentsOf1[i].y1);
 
+              this.animations.push(new StaticExplosion(x,y));
+
+              // Highlight contact surfaces during collision
               if(debugMode) {
                 ctx.beginPath();
                 ctx.strokeStyle = 'yellow';
@@ -121,5 +131,48 @@ class CollisionDetector {
         }
       }
     }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class StaticExplosion {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+
+    this.particles = [];
+    this.stillHappening = true;
+    this.explode();    
+  }
+
+  explode() {
+    for(let i = 0; i < randInt(1, 5); i++) {
+      this.particles.push(new Particle(this.x, this.y));
+    }
+  }
+
+  update() {
+    this.particles.forEach( part => part.update());
+    this.particles = this.particles.filter( part => part.size > part.minSize);
+    this.stillHappening = this.particles.length > 0 ? true : false;
   }
 }
