@@ -54,7 +54,7 @@ class PlayerShip {
 
 
     let wingSpan = this.maxWingSpan - (this.maxWingSpan - this.minWingSpan) * Math.hypot(this.speedX, this.speedY) / this.maxSpeed;
-    
+
     this.vertices[0] = {  x: this.x + this.radius * Math.cos(this.theta),
                 y: this.y + this.radius * Math.sin(this.theta)
     };
@@ -199,6 +199,8 @@ class LaserShot {
 
     this.speed = 30;
 
+    this.vertices = [];
+
     this.speedX = this.speed * Math.cos(this.theta);
     this.speedY = this.speed * Math.sin(this.theta);
 
@@ -208,6 +210,11 @@ class LaserShot {
     this.x += this.speedX;
     this.y += this.speedY;
 
+    this.vertices = [ {x: this.x, y: this.y},
+                      {x: this.x + this.radius * Math.cos(this.theta),
+                        y: this.y + this.radius * Math.sin(this.theta)
+                      }]
+
     this.draw();
   }
 
@@ -216,7 +223,7 @@ class LaserShot {
     ctx.lineWidth = 2;
     ctx.moveTo(this.x, this.y);
     ctx.strokeStyle = this.color;
-    ctx.lineTo(this.x + this.radius * Math.cos(this.theta), this.y + this.radius * Math.sin(this.theta));
+    ctx.lineTo(this.vertices[1].x, this.vertices[1].y);
     ctx.stroke();
   }
 }

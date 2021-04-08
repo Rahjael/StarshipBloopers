@@ -27,7 +27,7 @@ class CollisionDetector {
     this.detectCollisions();
   }
 
-  
+
   detectCollisions() {
 
     this.inProximity.forEach( (obj, i, arr) => {
@@ -35,11 +35,13 @@ class CollisionDetector {
       let obj1 = obj[0];
       let obj2 = obj[1];
 
-      let bothAsteroids = obj1 instanceof AsteroidPiece && obj2 instanceof AsteroidPiece;
-      let shipAndAsteroid = (obj1 instanceof PlayerShip && obj2 instanceof AsteroidPiece) 
+      let areBothAsteroids = obj1 instanceof AsteroidPiece && obj2 instanceof AsteroidPiece;
+      let areShipAndAsteroid = (obj1 instanceof PlayerShip && obj2 instanceof AsteroidPiece) 
                             || (obj1 instanceof AsteroidPiece && obj2 instanceof PlayerShip);
+      let isLaserShot = (obj1 instanceof LaserShot && obj2 instanceof AsteroidPiece) 
+                    ||  (obj1 instanceof AsteroidPiece && obj2 instanceof LaserShot);
 
-      if(bothAsteroids || shipAndAsteroid) {
+      if(areBothAsteroids || areShipAndAsteroid || isLaserShot) {
         // Get line equation of every pair of connected vertices:
         // Reminder: every vertex of an asteroid has: x, y, rad, theta
         // Vertices are stored in anticlockwise order
@@ -73,22 +75,23 @@ class CollisionDetector {
 
             
             if(coefficient1 < 1 && coefficient1 > 0 && coefficient2 < 1 && coefficient2 > 0) {
-              ctx.beginPath();
-              ctx.strokeStyle = 'yellow';
-              ctx.lineWidth = 3;
-              ctx.moveTo(segmentsOf1[i].x1, segmentsOf1[i].y1);
-              ctx.lineTo(segmentsOf1[i].x2, segmentsOf1[i].y2);
-              ctx.moveTo(segmentsOf2[j].x1, segmentsOf2[j].y1);
-              ctx.lineTo(segmentsOf2[j].x2, segmentsOf2[j].y2);
-              ctx.stroke();
-              //console.log("Collision found", coefficient1, coefficient2);
-              stopAnimation = false;
+
+
+              if(debugMode) {
+                ctx.beginPath();
+                ctx.strokeStyle = 'yellow';
+                ctx.lineWidth = 3;
+                ctx.moveTo(segmentsOf1[i].x1, segmentsOf1[i].y1);
+                ctx.lineTo(segmentsOf1[i].x2, segmentsOf1[i].y2);
+                ctx.moveTo(segmentsOf2[j].x1, segmentsOf2[j].y1);
+                ctx.lineTo(segmentsOf2[j].x2, segmentsOf2[j].y2);
+                ctx.stroke();
+              }
             }
           }
         }
       }
     });
-
   }
 
   detectProximity() {
@@ -119,5 +122,4 @@ class CollisionDetector {
       }
     }
   }
-
 }
