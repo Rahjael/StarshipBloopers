@@ -59,16 +59,11 @@ function animate() {
   playerShip.update(mouse);
   playerShip.draw();
 
-  // if(astManager.pieces.length < 10) {
-  //   astManager.getPiece();
-  // }
-
   if(astManager.asteroids.length < 10) {
     astManager.composeAsteroid();
   }
   
   astManager.update();
-
   collisionDetector.update();
 
   hud.update();
