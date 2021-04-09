@@ -47,7 +47,7 @@ canvas.addEventListener('keydown', (e) => {
     }
   }
 
-  if(e.key == 'd') {
+  if(e.key == 'v') {
     debugMode = debugMode == true ? false : true;
   }
 }, false);

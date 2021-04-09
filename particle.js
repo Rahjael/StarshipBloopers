@@ -1,7 +1,7 @@
 
 
 class Particle {
-  constructor(x, y, maxRadius, particleType) { // TODO add dynamic transition selection
+  constructor(x, y, maxRadius, particleType) {
     this.x = x;
     this.y = y;
     this.particleType = particleType;

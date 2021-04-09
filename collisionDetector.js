@@ -162,7 +162,7 @@ class CollisionDetector {
     // This helps avoiding too many unnecessary calculations
 
     // Empty previous proximities
-    this.inProximity = [];
+    this.inProximity.splice(0, this.inProximity.length);
 
     this.allObjects = astManager.pieces.concat(playerShip.laserShots, playerShip);
 

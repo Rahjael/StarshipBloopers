@@ -77,6 +77,7 @@ class PlayerShip {
       this.speedY += universe.dragFactor * Math.sign(speedY);
     }
 
+    this.laserShots = this.laserShots.filter( laserShot => laserShot.stillExists());
     this.laserShots.forEach( shot => shot.update());
   }
 
@@ -206,6 +207,13 @@ class LaserShot {
 
     this.hasHitTarget = false;
 
+  }
+
+  stillExists() {
+    if(!(this.x < -100 ||this.x > canvas.width + 100 ||this.y < -100 ||this.y > canvas.height + 100)) {
+      return true;
+    }
+    return false;
   }
 
   update() {
