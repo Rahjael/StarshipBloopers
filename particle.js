@@ -1,11 +1,11 @@
 
 
 class Particle {
-  constructor(x, y) {
+  constructor(x, y, maxRadius) { // TODO add dynamic transition selection
     this.x = x;
     this.y = y;
 
-    this.size = Math.random() * 10;
+    this.radius = Math.random() * maxRadius;
     this.speedX = Math.random() * 4 - 2;
     this.speedY = Math.random() * 4 - 2;
 
@@ -14,19 +14,24 @@ class Particle {
     this.color;
     this.updateColor();
     
-    this.minSize = 0.06;
+    this.minRadius = 0.06;
   }
 
   updateColor() {
     this.color = 'hsl(' + this.hue + ', 100%, ' + this.lightness +'%)'
   }
 
+  stillExists() {
+    if(this.radius < this.minRadius) return false;
+    return true;
+  }
+
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
-    this.size -= this.minSize;
+    this.radius -= this.minRadius;
 
-    if(this.size < 0) this.size = 0;
+    if(this.radius < 0) this.radius = 0;
 
     // Transition color
     if(this.lightness > 50) {
@@ -46,7 +51,7 @@ class Particle {
   draw() {
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     ctx.fill();
   }
 }

@@ -13,16 +13,10 @@ class AsteroidManager {
   update() {
     
     // Delete out of screen asteroid pieces
-    this.pieces = this.pieces.filter(ast => {
-      if(!(ast.x < -100 ||ast.x > canvas.width + 100 ||ast.y < -100 ||ast.y > canvas.height + 100)) {
-        return true;
-      }
-      ast.attachedTo.attachedPieces--;
-      return false;
-    });
+    this.pieces = this.pieces.filter(ast => ast.stillExists());
 
     // Delete empty asteroid entities
-    this.asteroids = this.asteroids.filter(ast => ast.attachedPieces > 0);
+    this.asteroids = this.asteroids.filter(ast => ast.stillExists());
 
     // DEBUGGING PURPOSES
     // this.pieces.forEach( a => {
@@ -109,6 +103,11 @@ class Asteroid {
 
   }
 
+  stillExists() {
+    if(this.attachedPieces > 0) return true;
+    return false;
+  }
+
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
@@ -152,7 +151,7 @@ class AsteroidPiece {
     this.color = 'hsl(250, ' + randInt(0, 25) + '%, ' + randInt(0, 25) + '%)';
     this.vertices = [];
 
-    this.attachedTo = false;
+    this.attachedTo = false; // will contain reference to asteroid entity
 
 
     // for(let i = 0; i < 4; i++) {
@@ -193,6 +192,14 @@ class AsteroidPiece {
       this.vertices.push(newVertex);
     } while(this.vertices[this.vertices.length - 1].theta < Math.PI * 2);
 
+  }
+
+  stillExists() {
+    if(!(this.x < -100 ||this.x > canvas.width + 100 ||this.y < -100 ||this.y > canvas.height + 100)) {
+      return true;
+    }
+    this.attachedTo.attachedPieces--;
+    return false;
   }
 
   update() {

@@ -7,7 +7,7 @@ class CollisionDetector {
     this.allObjects = [];
     this.inProximity = [];
 
-    this.animations = [];
+    this.particleAnimations = [];
 
 
   }
@@ -28,8 +28,8 @@ class CollisionDetector {
     }
     this.detectCollisions();
 
-    this.animations = this.animations.filter( anim => anim.stillHappening);
-    this.animations.forEach( anim => anim.update());
+    this.particleAnimations = this.particleAnimations.filter( anim => anim.stillHappening);
+    this.particleAnimations.forEach( anim => anim.update());
   }
 
 
@@ -70,21 +70,63 @@ class CollisionDetector {
         for(let i = 0; i < segmentsOf1.length; i++) {
           if(collisionFound) break;
           for(let j = 0; j < segmentsOf2.length; j++) {
-            let coefficient1 = ((segmentsOf2[j].x2 - segmentsOf2[j].x1) * (segmentsOf1[i].y1 - segmentsOf2[j].y1) - (segmentsOf2[j].y2 - segmentsOf2[j].y1) * (segmentsOf1[i].x1 - segmentsOf2[j].x1))
-                              /
-                              ((segmentsOf2[j].y2 - segmentsOf2[j].y1) * (segmentsOf1[i].x2 - segmentsOf1[i].x1) - (segmentsOf2[j].x2 - segmentsOf2[j].x1) * (segmentsOf1[i].y2 - segmentsOf1[i].y1));
+            let coefficient1 =  ( (segmentsOf2[j].x2 - segmentsOf2[j].x1) * (segmentsOf1[i].y1 - segmentsOf2[j].y1)
+                                - (segmentsOf2[j].y2 - segmentsOf2[j].y1) * (segmentsOf1[i].x1 - segmentsOf2[j].x1))
+                                /
+                                ( (segmentsOf2[j].y2 - segmentsOf2[j].y1) * (segmentsOf1[i].x2 - segmentsOf1[i].x1) 
+                                - (segmentsOf2[j].x2 - segmentsOf2[j].x1) * (segmentsOf1[i].y2 - segmentsOf1[i].y1));
 
-            let coefficient2 = ((segmentsOf1[i].x2 - segmentsOf1[i].x1) * (segmentsOf1[i].y1 - segmentsOf2[j].y1) - (segmentsOf1[i].y2 - segmentsOf1[i].y1) * (segmentsOf1[i].x1 - segmentsOf2[j].x1))
-                              /
-                              ((segmentsOf2[j].y2 - segmentsOf2[j].y1) * (segmentsOf1[i].x2 - segmentsOf1[i].x1) - (segmentsOf2[j].x2 - segmentsOf2[j].x1) * (segmentsOf1[i].y2 - segmentsOf1[i].y1));
+            let coefficient2 =  ( (segmentsOf1[i].x2 - segmentsOf1[i].x1) * (segmentsOf1[i].y1 - segmentsOf2[j].y1) 
+                                - (segmentsOf1[i].y2 - segmentsOf1[i].y1) * (segmentsOf1[i].x1 - segmentsOf2[j].x1))
+                                /
+                                ( (segmentsOf2[j].y2 - segmentsOf2[j].y1) * (segmentsOf1[i].x2 - segmentsOf1[i].x1) 
+                                - (segmentsOf2[j].x2 - segmentsOf2[j].x1) * (segmentsOf1[i].y2 - segmentsOf1[i].y1));
 
             
+            // If both coefficients are between 0 and 1, the segments are intersecting
             if(coefficient1 < 1 && coefficient1 > 0 && coefficient2 < 1 && coefficient2 > 0) {
 
+              collisionFound = true;
+
+              // Intersection point
               let x = segmentsOf1[i].x1 + coefficient1*(segmentsOf1[i].x2 - segmentsOf1[i].x1);
               let y = segmentsOf1[i].y1 + coefficient1*(segmentsOf1[i].y2 - segmentsOf1[i].y1);
 
-              this.animations.push(new StaticExplosion(x,y));
+              if(this.particleAnimations.length < 100) this.particleAnimations.push(new StaticExplosion(x,y));
+
+
+              // delete LaserShot
+              // TODO this introduces a glitch when shooting holding F. 
+              // The "stream" of lasers interrupts briefly when something hits the target.
+              // If you don't hit anything the stream is fluid and constant
+              // Understand why
+
+              // if(isLaserShot) {
+              //   let laserShot = obj1 instanceof LaserShot ? obj1 : obj2 instanceof LaserShot ? obj2 : undefined;
+              //   let index = playerShip.laserShots.indexOf(laserShot);
+              //   playerShip.laserShots.splice(index, 1);
+              // }
+
+              // Possible solution
+              // It works.
+              if(isLaserShot) {
+                let laserShot = obj1 instanceof LaserShot ? obj1 : obj2 instanceof LaserShot ? obj2 : undefined;
+                laserShot.hasHitTarget = true;
+                playerShip.laserShots = playerShip.laserShots.filter( laser => !laser.hasHitTarget);
+              }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
               // Highlight contact surfaces during collision
               if(debugMode) {
@@ -165,14 +207,16 @@ class StaticExplosion {
   }
 
   explode() {
-    for(let i = 0; i < randInt(1, 5); i++) {
-      this.particles.push(new Particle(this.x, this.y));
+    let maxNum = 1; //randInt(1, 2);
+    let maxSize = randInt(3, 7);
+    for(let i = 0; i < maxNum; i++) {
+      this.particles.push(new Particle(this.x, this.y, maxSize));
     }
   }
 
   update() {
     this.particles.forEach( part => part.update());
-    this.particles = this.particles.filter( part => part.size > part.minSize);
+    this.particles = this.particles.filter( part => part.stillExists());
     this.stillHappening = this.particles.length > 0 ? true : false;
   }
 }

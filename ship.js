@@ -204,6 +204,8 @@ class LaserShot {
     this.speedX = this.speed * Math.cos(this.theta);
     this.speedY = this.speed * Math.sin(this.theta);
 
+    this.hasHitTarget = false;
+
   }
 
   update() {
