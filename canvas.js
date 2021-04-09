@@ -5,15 +5,12 @@ canvas.height = window.innerHeight;
 
 let shipSize = Math.max(canvas.width, canvas.height)*0.02;
 
+let FkeyDown = false;
+
 // Debug stuff
 let stopAnimation = false;
 let debugMode = true;
 
-const mouse = {
-  x: null,
-  y: null,
-  isDown: false
-}
 
 window.addEventListener('resize', () => {
   canvas.width = window.innerWidth;
@@ -35,7 +32,10 @@ canvas.addEventListener('mousemove', (e) => {
 });
 
 canvas.addEventListener('keydown', (e) => {  
-  if(e.key == 'f') playerShip.fireLaser();
+  if(e.key == 'f') {
+    FkeyDown = true;
+    playerShip.fireLaser();
+  }
 
   if(e.key == 'p') {
     if(!stopAnimation) {
@@ -50,6 +50,13 @@ canvas.addEventListener('keydown', (e) => {
   if(e.key == 'v') {
     debugMode = debugMode == true ? false : true;
   }
+}, false);
+
+canvas.addEventListener('keyup', (e) => {  
+  if(e.key == 'f') {
+    FkeyDown = false;
+  }
+
 }, false);
 
 
@@ -80,6 +87,13 @@ const astManager = new AsteroidManager();
 const playerShip = new PlayerShip(canvas.width/2, canvas.height/2, shipSize);
 const collisionDetector = new CollisionDetector();
 const hud = new HUD();
+
+
+const mouse = {
+  x: null,
+  y: null,
+  isDown: false
+}
 
 
 animate();

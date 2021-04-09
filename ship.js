@@ -20,6 +20,15 @@ class PlayerShip {
     this.maxWingSpan = Math.PI * 0.8;
     this.minWingSpan = Math.PI * 0.2;
 
+    this.laserEnergy = 100;
+    this.laserRechargeRate = 1;
+    this.laserCost = 2;
+
+    this.engineEnergy = 100;
+    this.engineRechargeRate = 1;
+    this.engineCost = 2;
+
+
     this.engineParticles = [];
     this.laserShots = [];
 
@@ -48,7 +57,14 @@ class PlayerShip {
     if(this.y > canvas.height) this.y -= canvas.height;
 
     this.rotate(pointer);
+
+
     this.operateEngines();
+
+    if(this.engineEnergy < 100 && !mouse.isDown) {
+      this.engineEnergy += this.engineRechargeRate;
+    }
+
     this.engineParticles.forEach( part => part.update());
     this.engineParticles = this.engineParticles.filter( part => part.size > part.minSize);
 
@@ -77,6 +93,11 @@ class PlayerShip {
       this.speedY += universe.dragFactor * Math.sign(speedY);
     }
 
+
+    if(this.laserEnergy < 100 && !FkeyDown) {
+      this.laserEnergy += this.laserRechargeRate;
+    }
+
     this.laserShots = this.laserShots.filter( laserShot => laserShot.stillExists());
     this.laserShots.forEach( shot => shot.update());
   }
@@ -86,24 +107,28 @@ class PlayerShip {
   }
 
   operateEngines() {
-    if(!mouse.isDown) return;
+    if(!mouse.isDown || this.engineEnergy < 0) return;
+
     let newSpeedX = this.speedX + this.acceleration * Math.cos(this.theta);
     let newSpeedY = this.speedY + this.acceleration * Math.sin(this.theta);
-
+    
     if(Math.abs(newSpeedX) <= this.maxSpeed) {
       this.speedX = newSpeedX;
     }
     if(Math.abs(newSpeedY) <= this.maxSpeed) {
       this.speedY = newSpeedY;
     }
-
-
+    
+    this.engineEnergy -= this.engineCost;
     this.engineParticles.push(new EngineParticle(this.x, this.y, this.radius, this.theta));
-
+      
   }
 
   fireLaser() {
-    this.laserShots.push(new LaserShot(this.x, this.y, this.radius, this.theta));
+    if(this.laserEnergy > 0) {
+      this.laserEnergy -= this.laserCost;
+      this.laserShots.push(new LaserShot(this.x, this.y, this.radius, this.theta));
+    }
   }
 
   /*

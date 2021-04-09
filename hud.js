@@ -3,11 +3,30 @@
 class HUD {
   constructor() {
 
+    this.enginesBar = {
+      x: canvas.width - 40,
+      y: 0,
+      width: 40,
+      height: canvas.height
+    }
+
+    this.laserBar = {
+      x: 0,
+      y: 0,
+      width: 40,
+      height: canvas.height
+    }
+
+
   }
 
 
   update() {
     this.draw();
+    this.drawLaserEnergyBar();
+    this.drawEnginesEnergyBar();
+
+    
   }
 
   draw() {
@@ -34,5 +53,36 @@ class HUD {
       ctx.fillText('laserShots: ' + playerShip.laserShots.length, 50, 190);
 
     }
+  }
+
+
+  drawLaserEnergyBar() {
+    let height = this.laserBar.height * playerShip.laserEnergy / 100;
+    let y = this.laserBar.y + (canvas.height - height);
+
+    let grad = ctx.createLinearGradient(0, 0, this.laserBar.width, canvas.height);
+    grad.addColorStop(0, '#fa05e6');
+    grad.addColorStop(1, 'white');
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.rect(this.laserBar.x, y, this.laserBar.width, height);
+    ctx.fill();    
+
+  }
+
+  drawEnginesEnergyBar() {
+    let height = this.enginesBar.height * playerShip.engineEnergy / 100;
+    let y = this.enginesBar.y + (canvas.height - height);
+
+    let grad = ctx.createLinearGradient(0, 0, this.enginesBar.width, canvas.height);
+    grad.addColorStop(0, '#0000ff');
+    grad.addColorStop(1, 'white');
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.rect(this.enginesBar.x, y, this.enginesBar.width, height);
+    ctx.fill();    
+
   }
 }

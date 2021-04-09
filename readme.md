@@ -18,13 +18,13 @@ Work in progress: https://rahjael.github.io/StarshipBloopers/
 
 - [x] firing mah lazers
 
-- [ ] collision detection for destroying stuff
+- [x] collision detection for destroying stuff
 
 - [ ] more realistic physics adding mass to objects
 
-- [ ] destructible asteroids
+- [x] destructible asteroids
 
-- [ ] visual effects for asteroids destruction
+- [x] visual effects for asteroids destruction
 
 - [ ] HUD with player's hp, energy, shields and stuff like that (TBD)
 
