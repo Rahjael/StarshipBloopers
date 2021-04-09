@@ -4,6 +4,8 @@ class AsteroidManager {
   constructor() {
     this.pieces = [];
     this.asteroids = [];
+
+    this.destroyAnimations = [];
   }
 
   getPiece() {
@@ -27,6 +29,10 @@ class AsteroidManager {
 
     this.pieces.forEach( piece => piece.update());
     this.asteroids.forEach( ast => ast.update());
+
+
+    this.destroyAnimations = this.destroyAnimations.filter( anim => anim.stillHappening);
+    this.destroyAnimations.forEach( anim => anim.update());
   }
 
   composeAsteroid() {
@@ -114,6 +120,7 @@ class Asteroid {
   }
 
 
+
   draw() {
     //Reference circle
     if(debugMode) {
@@ -149,6 +156,9 @@ class AsteroidPiece {
     this.vertices = [];
 
     this.attachedTo = false; // will contain reference to asteroid entity
+
+    this.hp = randInt(3, 10);
+    this.isDestroyed = false;
 
 
     // for(let i = 0; i < 4; i++) {
@@ -192,6 +202,7 @@ class AsteroidPiece {
   }
 
   stillExists() {
+    if(this.isDestroyed) return false;
     if(!(this.x < -100 ||this.x > canvas.width + 100 ||this.y < -100 ||this.y > canvas.height + 100)) {
       return true;
     }
@@ -204,6 +215,21 @@ class AsteroidPiece {
       this.attachedTo.attachedPieces--;
       this.attachedTo = false;
     }
+  }
+
+  gotHit(x, y) {
+    this.hp -= 1;
+    if(this.hp <= 0) {
+      this.isDestroyed = true;
+      
+      // XXX the trigger for destruction is here. The alternative
+      // was to have the asteroidManager cycle through all pieces
+      // and detect destroyed ones at every animationFrame
+      // Having the trigger here avoid unnecessary checks for every frame
+      astManager.destroyAnimations.push(new DestroyAnimation(x, y));
+    }
+
+
   }
 
   update() {
@@ -258,5 +284,32 @@ class AsteroidPiece {
       ctx.lineWidth = 1;
       ctx.stroke();
     }
+  }
+}
+
+
+
+class DestroyAnimation {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+
+    this.particles = [];
+    this.stillHappening = true;
+    this.explode();
+  }
+
+  explode() {
+    let maxNum = 100;
+    let maxSize = randInt(3, 7);
+    for(let i = 0; i < maxNum; i++) {
+      this.particles.push(new Particle(this.x, this.y, maxSize, 'asteroidPieceDestruction'));
+    }
+  }
+
+  update() {
+    this.particles.forEach( part => part.update());
+    this.particles = this.particles.filter( part => part.stillExists());
+    this.stillHappening = this.particles.length > 0 ? true : false;
   }
 }

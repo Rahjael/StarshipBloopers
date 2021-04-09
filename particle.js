@@ -1,24 +1,73 @@
 
 
 class Particle {
-  constructor(x, y, maxRadius) { // TODO add dynamic transition selection
+  constructor(x, y, maxRadius, particleType) { // TODO add dynamic transition selection
     this.x = x;
     this.y = y;
+    this.particleType = particleType;
 
     this.radius = Math.random() * maxRadius;
     this.speedX = Math.random() * 4 - 2;
     this.speedY = Math.random() * 4 - 2;
-
-    this.hue = 60;
-    this.lightness = 100;
-    this.color;
-    this.updateColor();
     
+    
+    switch(this.particleType) {
+      case 'staticExplosion': 
+        this.hue = 60;
+        this.lightness = 100;
+        this.saturation = 100;
+      break;
+      case 'asteroidPieceDestruction':
+        this.hue = 20;
+        this.lightness = 80;
+        this.saturation = 30;
+        break;        
+      default:
+        this.hue = 60;
+        this.lightness = 100;
+        this.saturation = 100;
+          
+    }
+        
+    this.color;
     this.minRadius = 0.06;
+
+    this.updateColor();
   }
 
   updateColor() {
-    this.color = 'hsl(' + this.hue + ', 100%, ' + this.lightness +'%)'
+    this.color = 'hsl(' + this.hue + ', ' + this.saturation + '%, ' + this.lightness +'%)'
+  }
+
+  transitionColor() {
+    switch(this.particleType) {
+      case 'staticExplosion': 
+        if(this.lightness > 50) {
+          this.lightness -= 6;
+        }
+        else if(this.hue > 0) {
+          this.hue -= 3;
+        }
+        else if(this.lightness > 5) {
+          this.lightness -= 5;
+        }
+        break;
+      case 'asteroidPieceDestruction':
+        if(this.lightness > 5) {
+          this.lightness -= 5;
+        }      
+        break;
+      default: 
+        if(this.lightness > 50) {
+          this.lightness -= 6;
+        }
+        else if(this.hue > 0) {
+          this.hue -= 3;
+        }
+        else if(this.lightness > 5) {
+          this.lightness -= 5;
+        }
+    }
   }
 
   stillExists() {
@@ -33,19 +82,9 @@ class Particle {
 
     if(this.radius < 0) this.radius = 0;
 
-    // Transition color
-    if(this.lightness > 50) {
-      this.lightness -= 6;
-    }
-    else if(this.hue > 0) {
-      this.hue -= 3;
-    }
-    else if(this.lightness > 5) {
-      this.lightness -= 5;
-    }
+    this.transitionColor();
     this.updateColor();
     this.draw();
-
   }
 
   draw() {

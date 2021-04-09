@@ -94,7 +94,7 @@ class CollisionDetector {
               let x = segmentsOf1[i].x1 + coefficient1*(segmentsOf1[i].x2 - segmentsOf1[i].x1);
               let y = segmentsOf1[i].y1 + coefficient1*(segmentsOf1[i].y2 - segmentsOf1[i].y1);
 
-              if(this.particleAnimations.length < 100) this.particleAnimations.push(new StaticExplosion(x,y));
+              if(this.particleAnimations.length < 100) this.particleAnimations.push(new StaticExplosionAnimation(x,y));
 
 
               // delete LaserShot
@@ -118,7 +118,12 @@ class CollisionDetector {
                 laserShot.hasHitTarget = true;
                 playerShip.laserShots = playerShip.laserShots.filter( laser => !laser.hasHitTarget);
 
-                asteroidPiece.detach();
+                if(asteroidPiece.attachedTo) {
+                  asteroidPiece.detach();
+                }
+                else {
+                  asteroidPiece.gotHit(x, y);
+                }
               }
 
 
@@ -196,13 +201,7 @@ class CollisionDetector {
 
 
 
-
-
-
-
-
-
-class StaticExplosion {
+class StaticExplosionAnimation {
   constructor(x, y) {
     this.x = x;
     this.y = y;
@@ -216,7 +215,7 @@ class StaticExplosion {
     let maxNum = 1; //randInt(1, 2);
     let maxSize = randInt(3, 7);
     for(let i = 0; i < maxNum; i++) {
-      this.particles.push(new Particle(this.x, this.y, maxSize));
+      this.particles.push(new Particle(this.x, this.y, maxSize, 'staticExplosion'));
     }
   }
 
