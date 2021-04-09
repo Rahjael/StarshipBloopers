@@ -157,7 +157,7 @@ class AsteroidPiece {
 
     this.attachedTo = false; // will contain reference to asteroid entity
 
-    this.hp = randInt(3, 10);
+    this.hp = randInt(3, 20);
     this.isDestroyed = false;
 
 
