@@ -59,7 +59,7 @@ function animate() {
   playerShip.update(mouse);
   playerShip.draw();
 
-  if(astManager.asteroids.length < 10) {
+  if(astManager.asteroids.length < 3) {
     astManager.composeAsteroid();
   }
   

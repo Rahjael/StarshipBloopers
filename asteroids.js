@@ -38,8 +38,6 @@ class AsteroidManager {
       newPiece.attachedTo = asteroid;
       newPiece.x = point.x;
       newPiece.y = point.y;
-      newPiece.speedX = asteroid.speedX;
-      newPiece.speedY = asteroid.speedY;
 
       this.pieces.push(newPiece);
 
@@ -111,7 +109,6 @@ class Asteroid {
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
-
 
     this.draw();
   }
@@ -198,8 +195,15 @@ class AsteroidPiece {
     if(!(this.x < -100 ||this.x > canvas.width + 100 ||this.y < -100 ||this.y > canvas.height + 100)) {
       return true;
     }
-    this.attachedTo.attachedPieces--;
+    if(this.attachedTo) this.attachedTo.attachedPieces--;
     return false;
+  }
+
+  detach() {
+    if(this.attachedTo) {
+      this.attachedTo.attachedPieces--;
+      this.attachedTo = false;
+    }
   }
 
   update() {

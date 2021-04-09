@@ -142,7 +142,7 @@ class EngineParticle {
     this.speedX = (Math.random() * 4 - 2);
     this.speedY = (Math.random() * 4 - 2);
 
-    this.hue = 60;
+    this.hue = 175;
     this.lightness = 100;
     this.color;
     this.updateColor();
@@ -165,8 +165,8 @@ class EngineParticle {
     if(this.lightness > 50) {
       this.lightness -= 6;
     }
-    else if(this.hue > 0) {
-      this.hue -= 3;
+    else if(this.hue < 270) {
+      this.hue += 3;
     }
     else if(this.lightness > 5) {
       this.lightness -= 5;

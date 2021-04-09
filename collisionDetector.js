@@ -46,7 +46,9 @@ class CollisionDetector {
       let isLaserShot = (obj1 instanceof LaserShot && obj2 instanceof AsteroidPiece) 
                     ||  (obj1 instanceof AsteroidPiece && obj2 instanceof LaserShot);
 
-      if(areBothAsteroids || areShipAndAsteroid || isLaserShot) {
+      // TODO I disabled asteroid to asteroid collisions at the moment while I implement
+      // destruction with lasers
+      if( /*areBothAsteroids || */ areShipAndAsteroid || isLaserShot) {
         // Get line equation of every pair of connected vertices:
         // Reminder: every vertex of an asteroid has: x, y, rad, theta
         // Vertices are stored in anticlockwise order
@@ -111,8 +113,12 @@ class CollisionDetector {
               // It works.
               if(isLaserShot) {
                 let laserShot = obj1 instanceof LaserShot ? obj1 : obj2 instanceof LaserShot ? obj2 : undefined;
+                let asteroidPiece = obj1 instanceof AsteroidPiece ? obj1 : obj2 instanceof AsteroidPiece ? obj2 : undefined;
+
                 laserShot.hasHitTarget = true;
                 playerShip.laserShots = playerShip.laserShots.filter( laser => !laser.hasHitTarget);
+
+                asteroidPiece.detach();
               }
 
 
